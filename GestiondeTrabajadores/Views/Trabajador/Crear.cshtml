@@ -1,0 +1,195 @@
+﻿
+@model GestiondeTrabajadores.Models.Trabajadore;
+@{
+    ViewData["Title"] = "Crear";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<SelectListItem> departamentos = (List<SelectListItem>)ViewBag.listaDepartamentos;
+    List<SelectListItem> typesIdentificacion = (List<SelectListItem>)ViewBag.Identificador;
+}
+
+
+<div class="row text-center" style="width:100%;">
+    <div class="col-12">
+        <h2 class="text-primary">Lista de Trabajadores</h2>
+    </div>
+</div>
+
+<div class="col-4 text-right">
+     <!-- Button trigger modal -->
+    <button type="button" onclick="limpiarModal()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Crear Nuevo Cliente
+    </button>
+</div>
+
+<br />
+
+<div class="p-4 border rounded-1 bg-light">
+
+    <table id="tblData" class="thead-dark" style="width:100%;">
+        <thead>
+            <tr>
+                <th scope="col">Tipo Documento</th>
+                <th scope="col">Número de Documento</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Sexo</th>
+                <th scope="col">Departamento</th>
+                <th scope="col">Provincia</th>
+                <th scope="col">Distrito</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="post" enctype="multipart/form-data">
+
+                <div class="modal-header ">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">Creación de Trabajador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                 
+                <div class="modal-body">
+
+                    <div class="row border-0">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    </div>
+
+                    <input type="hidden" id="trabajadorId" asp-for="Id" />
+
+                    <div class="form-group">                        
+                        <div>
+                            <div class="form-group col-md-12">
+                                <label>Tipo de Documento</label>
+                                <select asp-for="TipoDocumento"  id="TipoDocumento" class="form-control">
+                                    <option value="dni">DNI</option>
+                                    <option value="pasaporte">Pasaporte</option>
+                                    <option value="carnet_extranjeria">Carnet de Extranjeria</option>                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>    
+                    
+                    <div class="form-group">
+                        <label>Número de Documento</label>
+                        <input asp-for="NumeroDocumento" id="numero_documento" class="form-control" placeholder="Número de Documento" />
+                        <span asp-validation-for="NumeroDocumento" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombres</label>
+                        <input asp-for="Nombres" id="Nombres" class="form-control" placeholder="Nombres" />
+                        <span asp-validation-for="Nombres" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                              <input asp-for="Sexo" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="M">
+                              <label class="form-check-label" for="inlineRadio1">Masculino</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input asp-for="Sexo" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="F">
+                              <label class="form-check-label" for="inlineRadio2">Femenino</label>
+                            </div>  
+                        </div>
+                        <span asp-validation-for="Sexo" class="text-danger"></span>
+                    </div>              
+
+                     <div class="form-group">                        
+                        <div>
+                            <label>Departamento</label>
+                            <div class="form-group col-md-12">                                                            
+                                @Html.DropDownListFor(m=>m.IdDepartamento,departamentos,"-- Seleccione --",new { @class = "form-control",@id="departamentosDropDown"})                                
+                            </div>
+                        </div>                       
+                    </div>
+                    <div class="form-group">                        
+                        <div>
+                            <div class="form-group col-md-12">
+                                <label>Provincia</label>
+                                <div class="form-group col-md-12">
+                                     @Html.DropDownListFor(m=>m.IdProvincia,new List<SelectListItem>(),"-- Seleccione --",new { @class = "form-control",@id="provinciasDropDown"})
+                                     
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    <div class="form-group">                        
+                        <div>
+                            <div class="form-group col-md-12">
+                                <label>Distrito</label>
+                                <div class="form-group col-md-12">                                
+                                     @Html.DropDownListFor(m=>m.IdDistrito,new List<SelectListItem>(),"-- Seleccione --",new { @class = "form-control",@id="distritosDropDown"})
+                                </div>
+                            </div>
+                        </div>                       
+                    </div>                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Trabajador.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#departamentosDropDown").change(function () {
+                 // VACIAMOS EL DropDownList
+                  $("#provinciasDropDown").empty();
+               $.get("/Trabajador/GetProvincias", { IdDepa: $("#departamentosDropDown").val() }, function (data) {                   
+                    // AÑADIMOS UN NUEVO label CON EL NOMBRE DEL ELEMENTO SELECCIONADO
+                    $("#provinciasDropDown").append("<option value> -- Seleccionar provincias de " + $("#departamentosDropDown option:selected").text() + " --</option>")
+                    // CONSTRUIMOS EL DropDownList A PARTIR DEL RESULTADO Json (data)
+                    $.each(data, function (index, row) {
+                        console.log(row);
+                        $("#provinciasDropDown").append("<option value='" + row.id + "'>"+row.nombreProvincia+"</option>")
+                    });
+                });
+            });           
+
+            $("#provinciasDropDown").change(function () {
+               // VACIAMOS EL DropDownList
+               $("#distritosDropDown").empty();
+               $.get("/Trabajador/GetDistritos", { IdProvincia: $("#provinciasDropDown").val() }, function (data) {                   
+                    // AÑADIMOS UN NUEVO label CON EL NOMBRE DEL ELEMENTO SELECCIONADO
+                    $("#distritosDropDown").append("<option value> -- Seleccionar distritos de " + $("#provinciasDropDown option:selected").text() + " --</option>")
+                    // CONSTRUIMOS EL DropDownList A PARTIR DEL RESULTADO Json (data)
+                    $.each(data, function (index, row) {
+                        console.log(row);
+                        $("#distritosDropDown").append("<option value='" + row.id + "'>"+row.nombreDistrito+"</option>")
+                    });
+                });
+            });
+        });
+    </script>
+
+}
+
+
+
